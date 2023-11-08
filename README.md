@@ -1,33 +1,33 @@
-# My React App
+# La meva aplicació React
 
-This is a basic project for beginners with React and Vite. The project includes a simple "Hello, World!" component.
+Amb aquesta pràctica anem a familiaritzar-nos amb (un possible) entorn de desenvolupament de React i els primers passos per crear una aplicació.
 
-## Installation
+## Instal·lació
 
-Before you start, make sure you have Node.js and npm installed on your machine.
+Et proposem un boilerplate per a React que utilitza [Vite](https://vitejs.dev/) com a eina de desenvolupament. Podeu trobar més informació sobre Vite a la seva [documentació](https://vitejs.dev/guide/). Vite a data d'avui (Novembre 2023) és un bundler que està guanyant molta popularitat i que té un rendiment molt superior a altres bundlers com Webpack o Parcel. Es possible que trobeu força recursos relacionats amb React que fan referència al seu ús.
 
-1. Clone this repository to your local machine.
-2. Navigate to the project directory.
-3. Run `npm install` to install the project dependencies.
+1. Cloneu aquest repositori al vostre ordinador local.
+2. Navegueu fins al directori del projecte.
+3. Executeu `npm install` per instal·lar les dependències del projecte.
 
-## Running the Project
+## Execució del projecte
 
-To start the development server, run `npm run dev`. This will start the Vite development server. You can view the application by opening `http://localhost:3000` in your browser.
+Per iniciar el servidor de desenvolupament, executeu `npm run dev`. Això iniciarà el servidor de desenvolupament Vite. Podeu veure l'aplicació obrint `http://localhost:3000` al vostre navegador.
 
-## Project Structure
+## Estructura del projecte
 
-The project has the following structure:
+El projecte té la següent estructura:
 
-- `src/App.jsx`: This is the main component of the application. It is responsible for rendering the main layout of the application and other components.
-- `src/index.jsx`: This is the entry point of the application. It is responsible for rendering the `App` component and attaching it to the DOM.
-- `src/components/HelloWorld.jsx`: This is a simple component that displays a "Hello, World!" message. It is used by the `App` component.
-- `vite.config.js`: This is the configuration file for Vite. It is used to customize the behavior of Vite, such as defining aliases and changing the build output directory.
-- `package.json`: This is the configuration file for npm. It lists the project's dependencies and scripts.
+- `src/App.jsx`: Aquest és el component principal de l'aplicació. És responsable de renderitzar la disposició principal de l'aplicació i altres components.
+- `src/index.jsx`: Aquest és el punt d'entrada de l'aplicació. És responsable de renderitzar el component `App` i adjuntar-lo al DOM.
+- `src/components/HelloWorld.jsx`: Aquest és un component senzill que mostra un missatge "Hola, món!". És utilitzat pel component `App`.
+- `vite.config.js`: Aquest és el fitxer de configuració per a Vite. S'utilitza per personalitzar el comportament de Vite, com ara definir àlies i canviar el directori de sortida de la compilació.
+- `package.json`: Aquest és el fitxer de configuració per a npm. Llista les dependències i scripts del projecte.
 
-## Contributing
+## Contribució
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Són benvingudes les sol·licituds de tira. Per a canvis importants, obriu primer un problema per discutir el que voleu canviar.
 
-## License
+## Llicència
 
 [MIT](https://choosealicense.com/licenses/mit/)
