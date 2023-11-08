@@ -23,3 +23,5 @@ El projecte té la següent estructura:
 - `src/components/HelloWorld.jsx`: Aquest és un component senzill que mostra un missatge "Hola, món!". És utilitzat pel component `App`.
 - `vite.config.js`: Aquest és el fitxer de configuració per a Vite. S'utilitza per personalitzar el comportament de Vite, com ara definir àlies i canviar el directori de sortida de la compilació.
 - `package.json`: Aquest és el fitxer de configuració per a npm. Llista les dependències i scripts del projecte.
+
+## Pràctica
