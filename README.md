@@ -147,26 +147,291 @@ Anem a crear un component formulari i mostra-ho per pantalla.
 Crea un component addicional anomenat `Form` a la carpeta `components`. Aquest component tindrà un input de text i un botó. Quan l'usuari faci clic al botó, el text de l'input es mostrarà per pantalla.
 
 ```jsx
-import React, { useState } from 'react';
-
+import React from 'react';
 function Form() {
-  const [text, setText] = useState('');
+  return (
+    <div>
+      <form>
+        <h1>Informació Estudiant</h1>
+        <label>Nom:</label>
+        <input type="text" name="fname" />
+        <br />
+        <label>Cognom:</label>
+        <input type="text" name="lname" />
+        <br />
+        <br />
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
+  );
+}
+export default Form;
+```
 
-  const handleChange = (event) => {
-    setText(event.target.value);
-  };
+Afegeix el component `Form` al component `App` i mostra'l per pantalla com es veu en la següent imatge:
 
-  const handleClick = () => {
-    alert(text);
-  };
+![Form](./assets/img_readme/form.webp)
 
+T'hauria de cridar l'atenció la manera en com has d'injectar el component `Form` dins del component `App`. Això és una de les característiques més potents de React. Els components poden ser injectats dins d'altres components. Com ja has pogut veure amb el cas del HelloWorld, podem injectar components fent ús de la sintaxi `<Component />`:
+
+```jsx
+import React from 'react';
+import HelloWorld from './components/HelloWorld';
+import Form from './components/Form'; // Importem el component Form
+
+function App() {
   return (
     <div className="App">
-      <input type="text" onChange={handleChange} />
-      <button onClick={handleClick}>Alert</button>
+      <HelloWorld />
+      <Form /> // Injectem el component Form
+    </div>
+  );
+}
+
+export default App;
+```
+
+### Estils dels components
+
+Podem aplicar estils als components de dues maneres:
+
+- Utilitzant la propietat `style` dels elements JSX
+- Utilitzant CSS
+
+Òbviament la manera més habitual de fer-ho és utilitzant CSS, però nosaltres, ja que hem vist TailwindCSS, anirem un passet més enllà i ho farem amb aquest.
+
+### TailwindCSS amb Vite
+
+Això no té res a veure amb React però ens permetrà fer ús d'una eina que ja coneixem i que ens permet obtenir resultats molt vistosos i professionals amb poques línies de codi.
+
+Per poder utilitzar Tailwind al nostre projecte de React hem de seguir els següents passos (alguns d'ells potser no caldrien ja que el boilderplate ja els té fets):
+
+1. Instal·lar TailwindCSS i PostCSS
+
+```bash
+npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
+```
+
+2. Crear un fitxer de configuració per a TailwindCSS
+
+```bash
+npx tailwindcss init -p
+```
+
+Pots afegir el següent contingut al fitxer `tailwind.config.js`:
+
+```js
+module.exports = {
+  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx,vue}'],
+  darkMode: false, // or 'media' or 'class'
+  theme: {
+    extend: {},
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+Bàsicament podem configurar sobre quins fitxers s'aplicarà TailwindCSS. Per més informació sobre la configuració de TailwindCSS pots consultar la seva [documentació](https://tailwindcss.com/docs/configuration).
+Amb això TailwindCSS ja està configurat per a utilitzar els colors, fonts, etc. que necessita.
+
+3. Configurar PostCSS
+
+Si no existeix, crea `postcss.config.js`:
+
+```bash
+touch postcss.config.js
+```
+
+```js
+export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+```
+
+4. Configurar Vite per utilitzar PostCSS
+
+```js
+// vite.config.js
+import { defineConfig } from 'vite';
+import reactRefresh from '@vitejs/plugin-react-refresh';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
+
+export default defineConfig({
+  plugins: [reactRefresh()],
+  css: {
+    postcss: {
+      plugins: [tailwindcss, autoprefixer],
+    },
+  },
+});
+```
+
+5. Importar TailwindCSS al nostre projecte
+
+```css
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+```js
+// src/index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+...
+```
+
+6. Utilitzar TailwindCSS
+
+Pots aplicar els estils de Tailwind fent servir classNames a les teves etiquetes HTML:
+
+```jsx
+// src/components/Form.jsx
+import React from 'react';
+
+function Form() {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <form className="w-1/2">
+        <h1 className="text-3xl font-bold text-center mb-8">
+          Informació Estudiant
+        </h1>
+        ....
+      </form>
     </div>
   );
 }
 
 export default Form;
 ```
+
+Intenta afegir estils a la resta del formulari de manera que acabis tenint quelcom semblant a la següent imatge:
+
+![Form](./assets/img_readme/form_tailwind.webp)
+
+### State a React
+
+Tornem a la càrrega amb conceptes específics de React. "State" o "estat" és un dels conceptes més importants de React. Els components React tenen un estat intern que pot ser utilitzat per guardar dades que poden canviar al llarg del temps. El valor d'una variable s'esfuma quan sortim d'una funció (àmbit de la funció), però en el cas de React podem utilitzar l'estat per guardar dades que persisteixen al llarg del temps.
+
+Anem a veure com fer el nostre formulari interactiu. Anem a intentar posar un missatge que doni la benvinguda a l'usuari que ha introduït el seu nom i cognom al formulari.
+
+En primer lloc haurem de fer servir les funcions d'estat de React. Per fer-ho, importem la funció `useState` de React:
+
+```jsx
+import React, { useState } from 'react';
+```
+
+Ara podem utilitzar la funció `useState` per crear una variable d'estat. Aquesta funció pren un paràmetre que és el valor inicial de la variable d'estat i retorna un array amb dos elements:
+
+- El valor de la variable d'estat
+- Una funció per actualitzar el valor de la variable d'estat
+
+Per exemple, en el nostre cas si volem guardar el nom de l'usuari, podem fer-ho de la següent manera (dins de la funció `Form`!):
+
+```jsx
+const [firstName, setFirstName] = useState('');
+```
+
+Ara podem utilitzar la variable `firstName` per emmagatzemar el nom de l'usuari i la funció `setFirstName` per actualitzar el valor de la variable `firstName`. Com que nosaltre ho tenim dins de l'input, podem fer servir la propietat `onBlur` de React que ens permet actualitzar el valor de la variable `firstName` quan l'usuari **surt de l'input**:
+
+```jsx
+<input
+  className="w-full mb-4 p-2 rounded-lg bg-gray-200"
+  type="text"
+  name="fname"
+  onBlur={(e) => setFirstName(e.target.value)}
+/>
+```
+
+Ara que ja saps com fer-ho amb firstName, **fes-ho també amb el cognom de l'usuari**. Crea també un estat `welcomeMessage` que ens permeti emmagatzemar el missatge de benvinguda a l'usuari. També pots crear un nou label al final del formulari per mostrar el missatge de benvinguda a l'usuari.
+
+```jsx
+<label className="block w-full text-4xl mb-4 p-2" id="studentMsg">
+  {welcomeMessage}
+</label>
+```
+
+Ara que ja tenim els nom i congom de l'usuari, anem a crear un altra variable `welcomeMessage` que ens permeti emmagatzemar i mostrar el missatge de benvinguda a l'usuari. Aquesta variable l'actualitzarem quan es faci el submit del formulari. Per fer-ho, utilitzarem la propietat `onSubmit` del formulari:
+
+```jsx
+<form
+  className="w-1/2"
+  onSubmit={handleSubmit}
+>
+```
+
+Ara només ens queda implementar la funció `handleSubmit` que actualitzarà el valor de la variable `welcomeMessage` i mostrarà el missatge de benvinguda a l'usuari:
+
+```jsx
+const handleSubmit = (e) => {
+  e.preventDefault();
+  setWelcomeMessage(`Hola ${firstName} ${lastName}!`);
+};
+```
+
+> **IMPORTANT:** Fixa't que per tal de fer ús de variables a JSX cal que fer ús de `{}`. Per exemple, `{welcomeMessage}`.
+
+Si has fet els passos correctament, hauries d'obtenir quelcom semblant a la següent imatge:
+
+![Form](./assets/img_readme/benvingut_BorderCollie.png)
+
+A continuació tens el codi d'exemple complet:
+
+```jsx
+import React, { useState } from 'react';
+
+function Form() {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [welcomeMessage, setWelcomeMessage] = useState('');
+  const handleSubmit = (e) => {
+    setWelcomeMessage(`Benvingut ${firstName} ${lastName}!`);
+    e.preventDefault(); // Necessari per evitar que el form es refresqui
+  };
+
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <form className="w-1/2" onSubmit={handleSubmit}>
+        <h1 className="text-3xl font-bold text-center mb-8">
+          Informació Estudiant
+        </h1>
+        <label className="block mb-2">Nom:</label>
+        <input
+          className="w-full mb-4 p-2 rounded-lg bg-gray-200"
+          type="text"
+          name="fname"
+          onBlur={(event) => setFirstName(event.target.value)}
+        />
+        <label className="block mb-2">Cognom:</label>
+        <input
+          className="w-full mb-4 p-2 rounded-lg bg-gray-200 border-1 border-dotted border-black"
+          type="text"
+          name="lname"
+          onBlur={(event) => setLastName(event.target.value)}
+        />
+        <input
+          className="w-full mb-4 p-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          type="submit"
+          value="Submit"
+        />
+        <label className="block w-full text-4xl mb-4 p-2" id="studentMsg">
+          {welcomeMessage}
+        </label>
+      </form>
+    </div>
+  );
+}
+
+export default Form;
+```
+
+> Nota: Utilitzem `event.preventDefault( )` per evitar que el navegador carregui una nova pàgina quan fem submit, que és un comportament natiu del botó d'enviament.
