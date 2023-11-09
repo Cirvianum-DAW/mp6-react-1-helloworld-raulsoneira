@@ -435,3 +435,237 @@ export default Form;
 ```
 
 > Nota: Utilitzem `event.preventDefault( )` per evitar que el navegador carregui una nova pàgina quan fem submit, que és un comportament natiu del botó d'enviament.
+
+### Virtual DOM
+
+No entrarem a explicar els detalls de què és el DOM i com ho fa servir React, però és una de les característiques que ha fet que React s'hagi popularitzat tant i que permet que només es facin canvis allà on és estrictament necessari. Això fa que les aplicacions React siguin mol eficients. Si vols saber més sobre el DOM i el Virtual DOM pots consultar la [documentació](https://reactjs.org/docs/faq-internals.html). Si vols més detalls, tens una molt bona explicació a [Logrocket](https://blog.logrocket.com/virtual-dom-react/).
+
+### Props (IMPORTANT!)
+
+Les **Props** a React són com els **atributs** a HTML. Són passades a un component com a paràmetres. Aquestes són utilitzades per personalitzar el component. Per exemple, podem passar el nom de l'usuari com a prop al component `Form`:
+
+Anem a continuar amb el nostre formulari. Imagina que volem un títol diferent en funció dels estudiants per al que s'estigui mostrant:
+
+- Per a estudiants en actiu --> Estudiants **"No-Graduats"**
+- Per a estudiants que ja han acabat els estudis **"Estudiants Graduats"**
+
+Per aconseguir-ho, imaginem que li fem arribar aquesta informació des del component `App` al component `Form` a través d'una prop. El component `App` és el component pare aquí, i `Form` és el component fill. Afegim un element desplegable al component `App` perquè l'usuari pugui triar entre estudiant de "no-graduat" o de "graduat". Recorda que hauràs d'importar la funció `useState` a `App`. Un cop ho tinguis, el codi hauria de ser semblant a aquest:
+
+```jsx
+import React from 'react';
+import { useState } from 'react';
+import Form from './components/Form';
+
+function App() {
+  const [tipusEstudiant, setTipusEstudiant] = useState('no-graduat'); // Afegim la variable d'estat tipusEstudiant
+  const handleChange = (e) => {
+    setTipusEstudiant(e.target.value);
+  }; // Afegim la funció que actualitza el valor de la variable d'estat tipusEstudiant
+  return (
+    <div className="flex flex-col items-center justify-center gap-5 h-screen">
+      <div className="tipusEstudiant">
+        <label className="mr-2">Selecciona Tipus d'Estudiant:</label>
+        // Afegim el desplegable que permet triar d'acord amb les variables i que
+        crida la funció handleChange
+        <select
+          className="appDropDown border rounded-md py-1 px-2"
+          onChange={handleChange}
+          value={tipusEstudiant}
+        >
+          <option value="no-graduat">No Graduat</option>
+          <option value="graduat">Graduat</option>
+        </select>
+      </div>
+      <Form tipusEstudiantSelect={tipusEstudiant} />
+    </div>
+  );
+}
+```
+
+Fixa't que hem afegit tota la lògica del desplegable al component `App`. Ara només ens queda passar el valor de la variable d'estat `tipusEstudiant` al component `Form` com a prop. Per fer-ho, ho hem aconseguit afegint el codi al component `App`:
+
+```jsx
+<Form tipusEstudiantSelect={tipusEstudiant} />
+```
+
+Podem anomenar el **prop** com vulguem, però és una bona pràctica utilitzar el mateix nom de la variable d'estat. En aquest cas ens hem permès passar-ho amb un nom més autoexplicatiu per fer-ne ús al component `Form`. Ara ja hauries de poder veure el següent resultat:
+
+![Form](./assets/img_readme/dropdown.webp)
+
+Ara per canviar el títol del formulari en funció del tipus d'estudiant, només ens queda fer ús de la prop `tipusEstudiant` al component `Form`. Hem de dur a terme dues accions:
+
+- Passar la prop al component `Form` a través de la funció.
+- Utilitzar la prop al component `Form`.
+
+Per passar la prop al component `Form` a través de la funció, només hem d'afegir la prop al component `Form`:
+
+```jsx
+<Form tipusEstudiantSelect={tipusEstudiant} />
+```
+
+Per utilitzar la prop al component `Form`, hem de passar el paràmetre `props` a la funció `Form` i utilitzar la prop `tipusEstudiantSelect` al component `Form`:
+
+```jsx
+function Form(props) {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <form className="w-1/2" onSubmit={handleSubmit}>
+        <h1 className="text-3xl font-bold text-center mb-8">
+          Detalls d'estudiant: {props.tipusEstudiantSelect}
+        </h1>
+        ...
+      </form>
+    </div>
+  );
+}
+```
+
+Finalment haurieu de poder canviar el títol del formulari en funció del tipus d'estudiant i veure quelcom semblant a la següent imatge:
+
+![Form](./assets/img_readme/graduats_nograduats.png)
+
+### Child a Parent
+
+Hem vist com passar dades del component pare al component fill. Ara veurem com passar dades del component fill al component pare. Això és el que es coneix com a **Child to Parent**.
+
+El child no pot passar dades directament al parent. El parent ha de passar una funció al child com a prop. El child pot cridar aquesta funció de callback per passar dades al parent.
+
+Anem a veure-ho amb un exemple. Imaginem que tenim places limitades per a estudiants graduats i no-graduats. Volem que el formulari ens mostre el nombre de places restants, donat un límit de 100 places de cada tipus ja que es fa servir per alguna qüestió de gestió interna/administració i volem que quan s'introdueixi la informació d'un estudiant, es mostri el nombre de places restants.
+
+Això vol dir que, quan sigui que es prem el botó de submit, el component `Form` ha de passar la informació al component `App` perquè aquest actualitzi el nombre de places restants i ho mostri al formulari.
+
+Primer de tot, creem una variable d'estat `places` al component `App` i la inicialitzem a 100:
+
+```jsx
+const [places, setPlaces] = useState(100);
+```
+
+Ara, creem una funció `setPlacesDisponibles` que actualitzi el valor de la variable d'estat `places`:
+
+```jsx
+const setPlacesDisponibles = (updatedPlaces) => {
+  setPlaces(updatedPlaces);
+};
+```
+
+Passem la funció `setPlacesDisponibles` i les places disponibles en aquell moment com a `placesActuals` al component `Form`:
+
+```jsx
+<Form
+  tipusEstudiantSelect={tipusEstudiant}
+  setPlacesDisponibles={setPlacesDisponibles}
+  placesActuals={places}
+/>
+```
+
+Vegem novament com quedaria App:
+
+```jsx
+import React from 'react';
+import { useState } from 'react';
+import Form from './components/Form';
+
+function App() {
+  const [tipusEstudiant, setTipusEstudiant] = useState('No Graduat');
+  const [places, setPlaces] = useState(100);
+  const handleChange = (e) => {
+    setTipusEstudiant(e.target.value);
+  };
+  // Afegim la funció que actualitza el valor de la variable d'estat places
+  const setPlacesDisponibles = (updatedPlaces) => {
+    setPlaces(updatedPlaces);
+  };
+  return (
+    <div className="flex flex-col items-center justify-center gap-5 h-screen">
+      <div className="tipusEstudiant">
+        // Afegim una nova etiqueta que mostra el nombre de places disponibles
+        <label className="text-2xl text-center mx-2 block">
+          Places Disponibles: {places}
+        </label>
+        <label className="text-2xl mx-2">Selecciona Tipus d'Estudiant:</label>
+        <select
+          className="appDropDown border rounded-md py-1 px-2"
+          onChange={handleChange}
+          value={tipusEstudiant}
+        >
+          <option value="No Graduat">No Graduat</option>
+          <option value="Graduat">Graduat</option>
+        </select>
+      </div>
+      // Afegim les dues noves props al component Form
+      <Form
+        tipusEstudiantSelect={tipusEstudiant}
+        setPlacesDisponibles={setPlacesDisponibles}
+        placesActuals={places}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+Ens queda actualitzar la informació al component `Form` perquè quan es faci submit, es passi la informació al component `App`.
+
+```jsx
+const handleSubmit = (e) => {
+  e.preventDefault();
+  setWelcomeMessage(`Benvingut ${firstName} ${lastName}!`);
+  // Afegim la crida a la funció setPlacesDisponibles
+  props.setPlacesDisponibles(props.placesActuals - 1);
+};
+```
+
+Vegem la foto del resultat:
+
+![Form](./assets/img_readme/places_disponibles.webp)
+
+Amb això ja hem vist com passar dades del component fill al component pare.
+
+### Props i State
+
+Anem a insistir en la diferència entre Props i State per saber quan fer-ne ús d'un o altre.
+
+- Les `props` son només de lectura mentre que l'estat (`state`) pot ser modificat.
+- Les `props` són passades a un component com a paràmetres mentre que l'estat (`state`) és definit dins d'un component.
+- Amb `state`podem emmagatzemar dades i fer que el nostre component sigui interactiu actualitzant el seu valor o estat. Si ens volem comunicar o accedir a l'estat d'un altre component, llavors utilitzarem `props`.
+- Les `props` poden pasar informació a través de l'arbre de components "top to bottom" (de pare a fill) mentre que l'estat (`state`) només pot ser passat de la manera que hem vist abans a través d'un callback
+
+### React condicional
+
+Anem a veure el darrer concepte de react condicional que ens permetrà mostrar o no mostrar un component en funció d'una condició. És molt habitual fer ús de l'operador ternari per aquesta tasca.
+
+Imaginem que volem mostrar el nombre de places disponibles en funció del tipus d'estudiant i diferenciar el nombre de places restants. Volem oferir 60 places per a No-Graduats i 40 places per a Graduats. Per fer-ho:
+
+Afegim una nova variable d'estat `placesNoGraduats` i `placesGraduats` al component `App`:
+
+```jsx
+const [ngPlaces, setNGPlaces] = useState(60);
+const [gPlaces, setGPlaces] = useState(40);
+```
+
+I amb una lògica ternària podem decidir si actualitzem un o altre:
+
+```jsx
+const setPlacesDisponibles = (updatedPlaces) => {
+  tipusEstudiant === 'No Graduat'
+    ? setPlacesNoGraduats(updatedPlaces)
+    : setPlacesGraduats(updatedPlaces);
+};
+```
+
+A `App` ja tenim la lògica per mostrar el nombre de places disponibles en funció del tipus d'estudiant. Si som capaços que el prop `placesActuals`contingui sempre el número de places disponibles del tipus d'estudiant seleccionat en aquest moment, podrem realitzar la lògica (resta) correctament.
+
+Passem doncs aquell valor que en interessa en cada cas, i amb la funció de Callback setPlacesDisponibles i el corresponent paràmetre (updatedPlaces) actualitzem l'estat desitjat.
+
+```jsx
+<Form
+  tipusEstudiantSelect={tipusEstudiant}
+  setPlacesDisponibles={setPlacesDisponibles}
+  placesActuals={tipusEstudiant === 'No Graduat' ? ngPlaces : gPlaces}
+/>
+```
+
+Si tot lliga i tens el codi correcte, hauries de poder verure un resultat com el següent.
+
+![Form](./assets/img_readme/final.gif)
