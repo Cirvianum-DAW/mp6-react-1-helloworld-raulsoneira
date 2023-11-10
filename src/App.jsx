@@ -1,12 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
 import HelloWorld from './components/HelloWorld';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-    <HelloWorld />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+function App() {
+  return (
+    <div>
+      <h1>Hola, soc App!</h1>
+      <HelloWorld />
+    </div>
+  );
+}
+
+export default App;
