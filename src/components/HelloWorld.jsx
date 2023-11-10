@@ -1,14 +1,8 @@
-import React from 'react';
+import React from 'react'; // Importem la llibreria de React
 
 function HelloWorld() {
-  const handleClick = () => {
-    alert('Hello World!');
-  };
-  return (
-    <div className="App">
-      <button onClick={handleClick}>React</button>
-    </div>
-  );
+  // Declarem la funció HelloWorld
+  return <h1>Hola, món!</h1>; // Retornem un element React
 }
 
-export default HelloWorld;
+export default HelloWorld; // Exportem la funció HelloWorld
