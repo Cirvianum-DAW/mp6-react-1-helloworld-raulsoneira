@@ -2,9 +2,13 @@
 
 Amb aquesta pràctica anem a familiaritzar-nos amb (un possible) entorn de desenvolupament de React i els primers passos per crear una aplicació.
 
+## Documentació oficial de React
+
+La documentació de React és extensa i està plena d'exemples que ens poden ser de gran ajuda. Compte, perquè la documentació actual es troba a [React](https://react.dev/) i no a [ReactJS](https://reactjs.org/), on trobaràs la documentació de versions anteriors (tot i que hi ha parts que poden ser vàlides i les trobaràs en castellà, és recomanable utilitzar la documentació oficial actualitzada).
+
 ## Instal·lació
 
-Et proposem un boilerplate per a React que utilitza [Vite](https://vitejs.dev/) com a eina de desenvolupament. Podeu trobar més informació sobre Vite a la seva [documentació](https://vitejs.dev/guide/). Vite a data d'avui (Novembre 2023) és un bundler que està guanyant molta popularitat i que té un rendiment molt superior a altres bundlers com Webpack o Parcel. Es possible que trobeu força recursos relacionats amb React que fan referència al seu ús.
+Et proposem un boilerplate per a React que utilitza [Vite](https://vitejs.dev/) com a eina de desenvolupament. Podeu trobar més informació sobre Vite a la seva [documentació](https://vitejs.dev/guide/). Vite a data d'avui (Abril 2024) és un bundler que està guanyant molta popularitat i que té un rendiment molt superior a altres bundlers com Webpack o Parcel. Es possible que trobeu força recursos relacionats amb React que fan referència al seu ús.
 
 1. Cloneu aquest repositori al vostre ordinador local.
 2. Navegueu fins al directori del projecte.
@@ -33,7 +37,7 @@ Els components són els blocs de construcció de qualsevol aplicació React. La 
 Un component és una classe o funció de JavaScript que pot optcionalment prendre algun "input" i retorna un element React. Aquest element defineix com ha d'aparèixer una certa part de la UI. Anem a veure-ho amb el cas del nostre HelloWorld.
 
 ```jsx
-import React from 'react'; // Importem la llibreria de React
+import React from "react"; // Importem la llibreria de React
 
 function HelloWorld() {
   // Declarem la funció HelloWorld
@@ -50,7 +54,7 @@ Modifica la funció `HelloWorld` amb el següent codi:
 ```jsx
 function HelloWorld() {
   const handleClick = () => {
-    alert('Hello World!');
+    alert("Hello World!");
   };
   return (
     <div className="App">
@@ -88,23 +92,44 @@ Com pots veure a `main` es RENDERITZEN el components. Això és un concepte elem
 - El node del DOM on volem renderitzar el component
 
 ```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
 
 ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
+);
+```
+
+**Important:** A partir de la versió 18 de React ha canviat lleugerament. Ara es fa servir `createRoot` enlloc de `ReactDOM.render`. Tot i que et funcionarà d'amdues maneres, és millor que utilitzis `createRoot` per a futura compatibilitat:
+
+```jsx
+import React from "react";
+import { createRoot } from "react-dom";
+import App from "./App";
+
+const root = createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
 );
 ```
 
 ### JSX
 
-A la secció anterior, has vist que vam retornar alguns elements `div` i `button` al component HelloWorld. Sembla HTML, **PERÒ NO HO ÉS!**. Es coneix com a JavaScript XML (JSX). JSX s'utilitza per descriure com ha de ser la interfície d'usuari (UI) a React. JSX sembla HTML, però és una capa de sintaxi sobre JavaScript. Vite s'encarrega de convertir JSX a JavaScript vàlid que el navegador pot entendre.
+A la secció anterior, has vist que vam retornar alguns elements `div` i `button` al component HelloWorld. Sembla HTML, **PERÒ NO HO ÉS!**. Es coneix com a JavaScript XML (JSX). JSX s'utilitza per descriure com ha de ser la interfície d'usuari (UI) a React.
+
+- JSX és una extensió de la sintaxi de JavaScript.
+- Ens permet escriure llenguatge de marcatge similar a HTML directament dins del nostre codi HTML.
+- Com que no és JS vàlid, necessitem un transpilador per convertir-lo a JS vàlid (Vite ho fa per nosaltres).
 
 Ens estem anticipant, però permet que t'ensenyi alguns exemples de JSX per veure les diferències amb HTML:
+
+- **Class vs className**: A JSX, no podem utilitzar la paraula `class` perquè és una paraula reservada de JavaScript. Enlloc d'això, hem d'utilitzar `className`:
 
 ```jsx
 // HTML
@@ -117,6 +142,8 @@ Ens estem anticipant, però permet que t'ensenyi alguns exemples de JSX per veur
   <button>React</button>
 </div>
 ```
+
+- **Atributs en format camelCase**: A JSX, els atributs que fan referència a funcions han de ser camelCase. Per exemple, `onclick` es converteix en `onClick`:
 
 ```jsx
 // HTML
@@ -138,8 +165,6 @@ Algunes diferències destacables són:
 - No es poden utilitzar paraules reservades de JavaScript com ara class o for
 - ...
 
-Les anirem coneixent al llarg de les pràctiques...
-
 ### Reaccionant a Inputs
 
 Anem a crear un component formulari i mostra-ho per pantalla.
@@ -147,7 +172,7 @@ Anem a crear un component formulari i mostra-ho per pantalla.
 Crea un component addicional anomenat `Form` a la carpeta `components`. Aquest component tindrà un input de text i un botó. Quan l'usuari faci clic al botó, el text de l'input es mostrarà per pantalla.
 
 ```jsx
-import React from 'react';
+import React from "react";
 function Form() {
   return (
     <div>
@@ -175,9 +200,9 @@ Afegeix el component `Form` al component `App` i mostra'l per pantalla com es ve
 T'hauria de cridar l'atenció la manera en com has d'injectar el component `Form` dins del component `App`. Això és una de les característiques més potents de React. Els components poden ser injectats dins d'altres components. Com ja has pogut veure amb el cas del HelloWorld, podem injectar components fent ús de la sintaxi `<Component />`:
 
 ```jsx
-import React from 'react';
-import HelloWorld from './components/HelloWorld';
-import Form from './components/Form'; // Importem el component Form
+import React from "react";
+import HelloWorld from "./components/HelloWorld";
+import Form from "./components/Form"; // Importem el component Form
 
 function App() {
   return (
@@ -222,7 +247,7 @@ Pots afegir el següent contingut al fitxer `tailwind.config.js`:
 
 ```js
 module.exports = {
-  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx,vue}'],
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx,vue}"],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
@@ -258,10 +283,10 @@ export default {
 
 ```js
 // vite.config.js
-import { defineConfig } from 'vite';
-import reactRefresh from '@vitejs/plugin-react-refresh';
-import tailwindcss from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
+import { defineConfig } from "vite";
+import reactRefresh from "@vitejs/plugin-react-refresh";
+import tailwindcss from "tailwindcss";
+import autoprefixer from "autoprefixer";
 
 export default defineConfig({
   plugins: [reactRefresh()],
@@ -296,7 +321,7 @@ Pots aplicar els estils de Tailwind fent servir classNames a les teves etiquetes
 
 ```jsx
 // src/components/Form.jsx
-import React from 'react';
+import React from "react";
 
 function Form() {
   return (
@@ -327,7 +352,7 @@ Anem a veure com fer el nostre formulari interactiu. Anem a intentar posar un mi
 En primer lloc haurem de fer servir les funcions d'estat de React. Per fer-ho, importem la funció `useState` de React:
 
 ```jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 ```
 
 Ara podem utilitzar la funció `useState` per crear una variable d'estat. Aquesta funció pren un paràmetre que és el valor inicial de la variable d'estat i retorna un array amb dos elements:
@@ -338,7 +363,7 @@ Ara podem utilitzar la funció `useState` per crear una variable d'estat. Aquest
 Per exemple, en el nostre cas si volem guardar el nom de l'usuari, podem fer-ho de la següent manera (dins de la funció `Form`!):
 
 ```jsx
-const [firstName, setFirstName] = useState('');
+const [firstName, setFirstName] = useState("");
 ```
 
 Ara podem utilitzar la variable `firstName` per emmagatzemar el nom de l'usuari i la funció `setFirstName` per actualitzar el valor de la variable `firstName`. Com que nosaltre ho tenim dins de l'input, podem fer servir la propietat `onBlur` de React que ens permet actualitzar el valor de la variable `firstName` quan l'usuari **surt de l'input**:
@@ -387,12 +412,12 @@ Si has fet els passos correctament, hauries d'obtenir quelcom semblant a la seg�
 A continuació tens el codi d'exemple complet:
 
 ```jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 function Form() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [welcomeMessage, setWelcomeMessage] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [welcomeMessage, setWelcomeMessage] = useState("");
   const handleSubmit = (e) => {
     setWelcomeMessage(`Benvingut ${firstName} ${lastName}!`);
     e.preventDefault(); // Necessari per evitar que el form es refresqui
@@ -452,12 +477,12 @@ Anem a continuar amb el nostre formulari. Imagina que volem un títol diferent e
 Per aconseguir-ho, imaginem que li fem arribar aquesta informació des del component `App` al component `Form` a través d'una prop. El component `App` és el component pare aquí, i `Form` és el component fill. Afegim un element desplegable al component `App` perquè l'usuari pugui triar entre estudiant de "no-graduat" o de "graduat". Recorda que hauràs d'importar la funció `useState` a `App`. Un cop ho tinguis, el codi hauria de ser semblant a aquest:
 
 ```jsx
-import React from 'react';
-import { useState } from 'react';
-import Form from './components/Form';
+import React from "react";
+import { useState } from "react";
+import Form from "./components/Form";
 
 function App() {
-  const [tipusEstudiant, setTipusEstudiant] = useState('no-graduat'); // Afegim la variable d'estat tipusEstudiant
+  const [tipusEstudiant, setTipusEstudiant] = useState("no-graduat"); // Afegim la variable d'estat tipusEstudiant
   const handleChange = (e) => {
     setTipusEstudiant(e.target.value);
   }; // Afegim la funció que actualitza el valor de la variable d'estat tipusEstudiant
@@ -561,12 +586,12 @@ Passem la funció `setPlacesDisponibles` i les places disponibles en aquell mome
 Vegem novament com quedaria App:
 
 ```jsx
-import React from 'react';
-import { useState } from 'react';
-import Form from './components/Form';
+import React from "react";
+import { useState } from "react";
+import Form from "./components/Form";
 
 function App() {
-  const [tipusEstudiant, setTipusEstudiant] = useState('No Graduat');
+  const [tipusEstudiant, setTipusEstudiant] = useState("No Graduat");
   const [places, setPlaces] = useState(100);
   const handleChange = (e) => {
     setTipusEstudiant(e.target.value);
@@ -648,7 +673,7 @@ I amb una lògica ternària podem decidir si actualitzem un o altre:
 
 ```jsx
 const setPlacesDisponibles = (updatedPlaces) => {
-  tipusEstudiant === 'No Graduat'
+  tipusEstudiant === "No Graduat"
     ? setPlacesNoGraduats(updatedPlaces)
     : setPlacesGraduats(updatedPlaces);
 };
@@ -662,7 +687,7 @@ Passem doncs aquell valor que en interessa en cada cas, i amb la funció de Call
 <Form
   tipusEstudiantSelect={tipusEstudiant}
   setPlacesDisponibles={setPlacesDisponibles}
-  placesActuals={tipusEstudiant === 'No Graduat' ? ngPlaces : gPlaces}
+  placesActuals={tipusEstudiant === "No Graduat" ? ngPlaces : gPlaces}
 />
 ```
 
