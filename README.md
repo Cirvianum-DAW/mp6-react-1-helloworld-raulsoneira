@@ -34,7 +34,7 @@ El projecte té la següent estructura:
 
 Els components són els blocs de construcció de qualsevol aplicació React. La interfície d'usuari (UI) d'una aplicació React és un component, i pot estar formada per múltiples components. Imagina que tens una paret de maons i cada maó aquí és un component que forma part del component final, la paret.
 
-Un component és una classe o funció de JavaScript que pot optcionalment prendre algun "input" i retorna un element React. Aquest element defineix com ha d'aparèixer una certa part de la UI. Anem a veure-ho amb el cas del nostre HelloWorld.
+Un component és una classe o funció de JavaScript que pot opcionalment prendre algun "input" i retorna un element React. Aquest element defineix com ha d'aparèixer una certa part de la UI. Anem a veure-ho amb el cas del nostre HelloWorld.
 
 ```jsx
 import React from "react"; // Importem la llibreria de React
@@ -64,7 +64,7 @@ function HelloWorld() {
 }
 ```
 
-Funciona?
+**Funciona?**
 
 Veureu que la pàgina del navegador s'actualitza i apareix el botó React. Quan feu clic, obtindreu l'alerta. Aquest component és un exemple d'un component funcional. Aquest no té paràmetres d'entrada, simplement retorna l'element que descriu com ha de ser l'aspecte de la secció de la UI:
 
@@ -157,13 +157,18 @@ Ens estem anticipant, però permet que t'ensenyi alguns exemples de JSX per veur
 </div>
 ```
 
-Algunes diferències destacables són:
+Algunes **diferències destacables** són doncs:
 
 - className enlloc de class
 - camelCase pels atributs enlloc de kebab-case
-- Funcions enlloc de strings per als atributs que fan referència a funcions (ex: onClick)
 - No es poden utilitzar paraules reservades de JavaScript com ara class o for
-- ...
+- Els parèntesis ens permeten executar codi JavaScript dins de JSX. El podem fer servir tant per cridar a funcions com per variables.
+- Has de retornar un únic element JSX (encara que aquest contingui altres elements JSX)
+
+Reviseu els següents recursos de la documentació oficial per tenir una millor comprensió de JSX:
+
+- [Wrtiting Markup with JSX](https://react.dev/learn/writing-markup-with-jsx)
+- [JavaScript in JSX with Curly Braces](https://react.dev/learn/javascript-in-jsx-with-curly-braces)
 
 ### Reaccionant a Inputs
 
@@ -197,7 +202,7 @@ Afegeix el component `Form` al component `App` i mostra'l per pantalla com es ve
 
 ![Form](./assets/img_readme/form.webp)
 
-T'hauria de cridar l'atenció la manera en com has d'injectar el component `Form` dins del component `App`. Això és una de les característiques més potents de React. Els components poden ser injectats dins d'altres components. Com ja has pogut veure amb el cas del HelloWorld, podem injectar components fent ús de la sintaxi `<Component />`:
+T'hauria de cridar l'atenció la manera en com has d'injectar el component `Form` dins del component `App`. Això és una de les característiques més potents de React. Els components poden ser injectats dins d'altres components. Com ja has pogut veure amb el cas del HelloWorld, podem injectar components fent ús de la sintaxi `<ElMeuComponent />`:
 
 ```jsx
 import React from "react";
@@ -345,9 +350,9 @@ Intenta afegir estils a la resta del formulari de manera que acabis tenint quelc
 
 ### State a React
 
-Tornem a la càrrega amb conceptes específics de React. "State" o "estat" és un dels conceptes més importants de React. Els components React tenen un estat intern que pot ser utilitzat per guardar dades que poden canviar al llarg del temps. El valor d'una variable s'esfuma quan sortim d'una funció (àmbit de la funció), però en el cas de React podem utilitzar l'estat per guardar dades que persisteixen al llarg del temps.
+Tornem a la càrrega amb conceptes específics de React. **"State", l'estat en català, és un dels conceptes més importants de React**. Els components React tenen un estat intern que pot ser utilitzat per guardar dades que poden canviar al llarg del temps. El valor d'una variable s'esfuma quan sortim d'una funció (àmbit de la funció), però en el cas de React podem utilitzar l'estat per guardar dades que persisteixen al llarg del temps.
 
-Anem a veure com fer el nostre formulari interactiu. Anem a intentar posar un missatge que doni la benvinguda a l'usuari que ha introduït el seu nom i cognom al formulari.
+Anem a veure com fer el nostre formulari interactiu. Volem afegir un missatge que doni la benvinguda a l'usuari que ha introduït el seu nom i cognom al formulari.
 
 En primer lloc haurem de fer servir les funcions d'estat de React. Per fer-ho, importem la funció `useState` de React:
 
@@ -360,13 +365,13 @@ Ara podem utilitzar la funció `useState` per crear una variable d'estat. Aquest
 - El valor de la variable d'estat
 - Una funció per actualitzar el valor de la variable d'estat
 
-Per exemple, en el nostre cas si volem guardar el nom de l'usuari, podem fer-ho de la següent manera (dins de la funció `Form`!):
+Per exemple, en el nostre cas si volem guardar el nom de l'usuari, podem fer-ho de la següent manera (atenció!, ho has de fer dins funció `Form`):
 
 ```jsx
 const [firstName, setFirstName] = useState("");
 ```
 
-Ara podem utilitzar la variable `firstName` per emmagatzemar el nom de l'usuari i la funció `setFirstName` per actualitzar el valor de la variable `firstName`. Com que nosaltre ho tenim dins de l'input, podem fer servir la propietat `onBlur` de React que ens permet actualitzar el valor de la variable `firstName` quan l'usuari **surt de l'input**:
+Ara podem utilitzar la variable `firstName` per emmagatzemar el nom de l'usuari i la funció `setFirstName` per actualitzar el valor de la variable `firstName`. Com que nosaltres ho tenim dins de l'input, podem fer servir la propietat `onBlur` de React que ens permet actualitzar el valor de la variable `firstName` quan l'usuari **surt de l'input**:
 
 ```jsx
 <input
@@ -465,9 +470,13 @@ export default Form;
 
 No entrarem a explicar els detalls de què és el DOM i com ho fa servir React, però és una de les característiques que ha fet que React s'hagi popularitzat tant i que permet que només es facin canvis allà on és estrictament necessari. Això fa que les aplicacions React siguin mol eficients. Si vols saber més sobre el DOM i el Virtual DOM pots consultar la [documentació](https://reactjs.org/docs/faq-internals.html). Si vols més detalls, tens una molt bona explicació a [Logrocket](https://blog.logrocket.com/virtual-dom-react/).
 
-### Props (IMPORTANT!)
+### Props (SUPER IMPORTANT!)
 
-Les **Props** a React són com els **atributs** a HTML. Són passades a un component com a paràmetres. Aquestes són utilitzades per personalitzar el component. Per exemple, podem passar el nom de l'usuari com a prop al component `Form`:
+Les **Props** a React són com els **atributs** a HTML. Són passades a un component com a paràmetres. Aquestes són utilitzades per personalitzar el component. Et deixo un video aclaratiu que et recomano abans d'entrar a fer-ho tu mateix:
+
+[Comunicación entre componentes - Props](https://www.youtube.com/watch?v=wVxvXybXObg&ab_channel=FernandoHerrera)
+
+Per exemple, podem passar el nom de l'usuari com a prop al component `Form`:
 
 Anem a continuar amb el nostre formulari. Imagina que volem un títol diferent en funció dels estudiants per al que s'estigui mostrant:
 
